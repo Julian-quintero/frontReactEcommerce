@@ -11,7 +11,7 @@ export default function HomeScreen() {
   const dispatch = useDispatch()
   const productList = useSelector(state => state.productList)
   const {loading,error,products} = productList 
-  console.log(error);
+
 
 
  // const [products, setproducts] = useState([])
