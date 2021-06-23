@@ -14,7 +14,7 @@ export default function ProductScreen(props) {
   //   setproduct(data)
   //  }
 
-  const [qty, setQty] = useState(0)
+  const [qty, setQty] = useState(1)
 
   
 
@@ -30,7 +30,7 @@ export default function ProductScreen(props) {
   }, [props]);
 
   const addToCartHandler=()=>{
-    props.history.push(`/cart/${props.match.params.id}?qty=${qty+1}`)
+    props.history.push(`/cart/${props.match.params.id}?qty=${qty}`)
   }
 
   return (

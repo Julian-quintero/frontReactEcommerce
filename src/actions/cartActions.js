@@ -4,9 +4,9 @@ import { CART_ADD_ITEM, CART_REMOVE_ITEM } from '../constants/cartConstants'
 
 
 export const addToCart = (id,qty) => {
-    return async (dispatch,state) =>{
+    return async (dispatch,getState) =>{
 
-        const res = await fetch(`/api/products`);
+        const res = await fetch(`/api/products/${id}`);
         const data = await res.json();
 
         dispatch({
