@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
+import { Row, Col, Image, ListGroup, Card, Button,Form } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { listProductsDetails } from "../actions/productActions";
@@ -14,6 +14,10 @@ export default function ProductScreen(props) {
   //   setproduct(data)
   //  }
 
+  const [qty, setQty] = useState(0)
+
+  
+
 
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
@@ -24,6 +28,10 @@ export default function ProductScreen(props) {
     //fetchProduct(props)
     dispatch(listProductsDetails(props.match.params.id));
   }, [props]);
+
+  const addToCartHandler=()=>{
+    props.history.push(`/cart/${props.match.params.id}?qty=${qty+1}`)
+  }
 
   return (
     <div>
@@ -76,8 +84,29 @@ export default function ProductScreen(props) {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+
+                {product.countInStock>0 && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Qty</Col>
+                      <Col>
+                      <Form.Control as='select' value={qty} onChange={(e)=>{setQty(e.target.value)}}>
+                       {[...Array(product.countInStock).keys()].map(x=>(
+                          <option key={x+1} >{x+1}</option>
+                        ))
+                      }
+
+                      </Form.Control>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
+
+
+
                 <ListGroup.Item>
                   <Button
+                  onClick={addToCartHandler}
                     className="btn btn-dark"
                     type="button"
                     disable={product.countInStock === 0}
