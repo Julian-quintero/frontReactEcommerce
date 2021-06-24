@@ -7,6 +7,7 @@ export const addToCart = (id,qty) => {
     return async (dispatch,getState) =>{
 
         const res = await fetch(`/api/products/${id}`);
+        //60c6b1216d0c822f7c0c15d9
         const data = await res.json();
 
         dispatch({
@@ -16,7 +17,7 @@ export const addToCart = (id,qty) => {
                 name:data.name,
                 image:data.image,
                 price:data.price,
-                countInStock:data.countInSotck,
+                countInStock:data.countInStock,
                 qty
             }
         })

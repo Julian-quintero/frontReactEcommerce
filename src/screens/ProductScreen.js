@@ -22,6 +22,7 @@ export default function ProductScreen(props) {
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product} = productDetails;
+  console.log(product.countInStock);
   
 
   useEffect(() => {
@@ -92,6 +93,7 @@ export default function ProductScreen(props) {
                       <Col>
                       <Form.Control as='select' value={qty} onChange={(e)=>{setQty(e.target.value)}}>
                        {[...Array(product.countInStock).keys()].map(x=>(
+                         console.log(x),
                           <option key={x+1} >{x+1}</option>
                         ))
                       }
