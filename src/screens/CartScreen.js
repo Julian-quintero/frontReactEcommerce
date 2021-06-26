@@ -34,6 +34,11 @@ export const CartScreen = (props) => {
     const removeFromCartHandler = (id) => {
         console.log('remove')
     }
+
+    const checkoutHandler = () => {
+        props.history.push('/login?redirect=shipping')
+        //si no esta logeado va a login sino va a shipping
+    }
     return (
         <Row>
             <Col md={8}>
@@ -82,15 +87,19 @@ export const CartScreen = (props) => {
             <Col md={4}>
                 <Card>
                     <ListGroup.Item>
-                        <h2>
-
+                        <h3>
+                        SUBTOTAL: 
                         {cartItems.reduce((acc,item)=>acc+item.qty,0)} {
                             //0 es donde inicia
                         }
 
-                        </h2>
+                        </h3>
+                        ${cartItems.reduce((acc,item)=>acc+item.qty*item.price,0).toFixed(2)}
                        
                     </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Button type='button' className='btn-block' disabled={cartItems.length===0} onClick={checkoutHandler}>boton</Button>
+                        </ListGroup.Item>
                 </Card>
             </Col>
       
