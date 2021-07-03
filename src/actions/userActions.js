@@ -5,7 +5,10 @@ import {
   USER_LOGIN_LOGOUT,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCESS,
-  USER_REGISTER_FAIL
+  USER_REGISTER_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCESS,
+  USER_DETAILS_FAIL
 } from "../constants/userConstants";
 
 export const login = (email, password) => {
@@ -86,7 +89,7 @@ export const register = (name,email, password) => {
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       dispatch({
-        type: USER_LOGIN_FAIL,
+        type: USER_REGISTER_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
@@ -102,3 +105,44 @@ export const logout = () => {
     dispatch({type: USER_LOGIN_LOGOUT})
   }
 }
+
+export const getUserDetails = (id) => {
+  return async (dispatch,getState) => {
+    dispatch({ type: USER_DETAILS_REQUEST });
+
+    const {userLogin:{userInfo}} = getState()
+
+
+    try {
+      const res = await fetch(`/api/users/${id}`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`
+        }   
+      });
+
+      const data = await res.json();
+
+      if (data.message) {
+        throw new Error('Usuario no valido') //esto es provicional, lo puse por que habia un error hay que solucionar         
+      }   
+
+      dispatch({
+        type: USER_DETAILS_SUCESS,
+        payload: data,
+      });
+
+      //me logeo al registrarme
+    
+    } catch (error) {
+      dispatch({
+        type: USER_DETAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+};
