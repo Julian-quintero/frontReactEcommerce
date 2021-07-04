@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import {LinkContainer  } from "react-router-bootstrap";
 import { Container, Nav, Navbar, Button, NavDropdown } from "react-bootstrap";
 import { useSelector,useDispatch } from "react-redux";
@@ -13,9 +13,29 @@ export default function Header() {
   const userLogin = useSelector(state => state.userLogin)
   const {userInfo} = userLogin
 
+  const userDetails= useSelector((state) => state.userDetails);
+  const { loading, error, user} = userDetails;
+
+    
+  const userUpdateProfile= useSelector((state) => state.userUpdateProfile);
+  const {success} = userUpdateProfile;
+
   const logoutHandler = () =>{
     dispatch(logout())
   }
+
+  const [Name, setName] = useState()
+
+  useEffect(() => {
+ 
+    if (userUpdateProfile.userInfo) {  
+      setName(userUpdateProfile.userInfo.name)
+      
+    }else{
+      setName(user.name)
+    }
+  
+  }, [userUpdateProfile,user.name])
   return (
     <header>
      
@@ -33,7 +53,7 @@ export default function Header() {
               </LinkContainer>
               {userInfo ? (
 
-              <NavDropdown title={userInfo.name}>
+              <NavDropdown title={Name}>
                 <LinkContainer to="/profile">
 
                   <NavDropdown.Item>Profile</NavDropdown.Item>
