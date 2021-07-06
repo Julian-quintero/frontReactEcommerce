@@ -21,6 +21,16 @@ import {Link} from 'react-router-dom'
 
 export const PlaceOrderScreen = () => {
   const cart = useSelector((state) => state.cart);
+
+  //calculate prices
+  cart.itemsPrice = cart.cartItems.reduce((acc,item)=>acc+item.price*item.qty,0)
+  cart.shippingPrice = cart.itemsPrice<100?0:100
+  cart.taxPrice=Number((0.15*cart.itemsPrice.toFixed(2)))
+  cart.totalPrice = Number(cart.itemsPrice) + Number(cart.taxPrice) + Number(cart.shippingPrice) + Number(cart.itemsPrice)
+
+  const placeholderHandler = () => {
+      
+  }
   return (
     <>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>
@@ -81,8 +91,34 @@ export const PlaceOrderScreen = () => {
                         <h2>order summary</h2>
                     </ListGroup.Item>
                     <ListGroup.Item>
+                        <Row>
                        <Col>items</Col>
+                       <Col>${cart.itemsPrice}</Col>
+                       </Row>
                     </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                       <Col>shipping</Col>
+                       <Col>${cart.shippingPrice}</Col>
+                       </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                       <Col>tax</Col>
+                       <Col>${cart.taxPrice}</Col>
+                       </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                       <Col>total</Col>
+                       <Col>${cart.totalPrice}</Col>
+                       </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Button type='button' className='btn-block' disabled={cart.cartItems===0} onClick={placeholderHandler}>Place order</Button>
+               
+                    </ListGroup.Item>
+                
 
                 </ListGroup>
             </Card>
