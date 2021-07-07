@@ -22,7 +22,7 @@ if (!shippingAddress) {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod({paymentMethod}));
-    history.push("/payment");
+    history.push("/placeorder");
   };
   return (
     <FormContainer>
@@ -30,7 +30,7 @@ if (!shippingAddress) {
       <h1>payment method</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="address">
-          <Form.Label as='lengend'>select method</Form.Label>
+          <Form.Label as='legend'>select method</Form.Label>
           <Col>
           <Form.Check type='radio' label='paypal or credit card' id='paypal' name='paymentMethod' value='paypal' checked onChange={(e)=>setpaymentMethod(e.target.value)}></Form.Check>
           </Col>
