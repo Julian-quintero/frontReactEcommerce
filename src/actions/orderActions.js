@@ -1,9 +1,10 @@
-import { ORDER_CREATE_FAIL, ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_SUCCESS,ORDER_DETAILS_REQUEST } from "../constants/orderConstants";
+import axios from "axios";
+import { ORDER_CREATE_FAIL, ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_SUCCESS,ORDER_DETAILS_REQUEST, ORDER_PAY_FAIL, ORDER_PAY_SUCCESS, ORDER_PAY_REQUEST } from "../constants/orderConstants";
 
 
 
 export const createOrder = (order) => {
-    console.log(order);
+
     return async (dispatch, getState) => {
       dispatch({ type: ORDER_CREATE_REQUEST });
   
@@ -29,7 +30,7 @@ export const createOrder = (order) => {
             throw new Error(data.message); //esto es provicional, lo puse por que habia un error hay que solucionar
         }
   
-        console.log("data", data);  
+      
       
         dispatch({
           type: ORDER_CREATE_SUCCESS,
@@ -50,8 +51,7 @@ export const createOrder = (order) => {
   };
 
   export const getOrderDetails = (id) => {
-
-    console.log('id backend',id);
+    
  
     return async (dispatch, getState) => {
       dispatch({ type: ORDER_DETAILS_REQUEST });
@@ -72,9 +72,8 @@ export const createOrder = (order) => {
 
         if (data.message) {
             throw new Error(data.message); //esto es provicional, lo puse por que habia un error hay que solucionar
-        }
-  
-        console.log("data", data);  
+        }  
+       
       
         dispatch({
           type: ORDER_DETAILS_SUCCESS,
@@ -93,4 +92,60 @@ export const createOrder = (order) => {
       }
     };
   };
+
+  export const payOrder = (orderId,paymentResult) => {
+
+
+    const paymentResult2 = { 
+      id:'123',
+      status:'paid',
+      update_time:'bla',
+      email_address:'123346@gmal.com'
+    }
+
+ 
+    return async (dispatch, getState) => {
+      dispatch({ type: ORDER_PAY_REQUEST });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = { headers: {    
+        'Content-Type':'application/json', 
+        Authorization: `Bearer ${userInfo.token}`        
+      }
+
+      }
+
+      try {
+
+        const {data } = await axios.put(`/api/orders/${orderId}/pay`,paymentResult2,config)    
+  
+
+
+        if (data.message) {
+            throw new Error(data.message); //esto es provicional, lo puse por que habia un error hay que solucionar
+        }
+  
+  
+      
+        dispatch({
+          type: ORDER_PAY_SUCCESS,
+          payload: data,
+        });         
+  
+        //me logeo al registrarme
+      } catch (error) {
+        dispatch({
+          type: ORDER_PAY_FAIL,
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message,
+        });
+      }
+    };
+  };
+  
   
