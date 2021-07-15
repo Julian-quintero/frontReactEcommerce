@@ -12,6 +12,9 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCESS,
   USER_UPDATE_PROFILE_FAIL,
+  USER_LIST_REQUEST,
+  USER_LIST_FAIL,
+  USER_LIST_SUCESS
 } from "../constants/userConstants";
 
 export const login = (email, password) => {
@@ -189,6 +192,48 @@ export const updateUserProfile = (user) => {
     } catch (error) {
       dispatch({
         type: USER_UPDATE_PROFILE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+};
+
+export const listUsers = () => {
+  return async (dispatch, getState) => {
+    dispatch({ type: USER_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    try {
+      const res = await fetch(`/api/users`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        }      
+      });
+
+      const data = await res.json();
+    
+
+      if (data.message) {
+        throw new Error("Usuario no valido"); //esto es provicional, lo puse por que habia un error hay que solucionar
+      }
+
+      dispatch({
+        type: USER_LIST_SUCESS,
+        payload: data,
+      });
+
+      //me logeo al registrarme
+    } catch (error) {
+      dispatch({
+        type: USER_LIST_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
