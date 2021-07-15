@@ -39,7 +39,7 @@ export const UserListScreen = () => {
             </tr>
           </thead>
           <tbody>
-            {user.map((user) => (
+            {users.map((user) => (
               <tr key={user._id}>
                 <td>{user._id}</td>
                 <td>{user.name}</td>
