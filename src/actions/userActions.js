@@ -14,7 +14,9 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   USER_LIST_REQUEST,
   USER_LIST_FAIL,
-  USER_LIST_SUCESS
+  USER_LIST_SUCESS,
+  USER_LIST_RESET,
+  USER_DETAILS_RESET
 } from "../constants/userConstants";
 
 export const login = (email, password) => {
@@ -109,6 +111,8 @@ export const logout = () => {
   return async (dispatch) => {
     localStorage.removeItem("userInfo");
     dispatch({ type: USER_LOGIN_LOGOUT });
+    dispatch({ type: USER_LIST_RESET });
+    dispatch({ type: USER_DETAILS_RESET });
   };
 };
 
@@ -219,8 +223,7 @@ export const listUsers = () => {
       });
 
       const data = await res.json();
-      console.log(data);
-    
+      
 
       if (data.message) {
         throw new Error("Usuario no valido"); //esto es provicional, lo puse por que habia un error hay que solucionar

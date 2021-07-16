@@ -57,6 +57,8 @@ export const orderDetailsReducers = (state = {orderItems:[],shippingAddress:{},l
         error:action.payload
 
       };
+
+      
       default:
         return state;
   }
