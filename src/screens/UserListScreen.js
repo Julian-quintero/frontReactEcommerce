@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { listUsers, register } from "../actions/userActions";
+import { listUsers, register,deleteUser } from "../actions/userActions";
 import { FormContainer } from "../components/FormContainer";
 import { LinkContainer } from "react-router-bootstrap";
 
@@ -14,6 +14,9 @@ export const UserListScreen = ({ history}) => {
 
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin;
+
+  const userDelete = useSelector(state => state.userDelete)
+  const { success:successDelete} = userDelete;
 
 
   useEffect(() => {
@@ -27,10 +30,15 @@ export const UserListScreen = ({ history}) => {
 
 
     
-  }, [dispatch,history]);
+  }, [dispatch,history,successDelete]);
 
-  const deleteHandler = () => {
-      console.log('delete');
+  const deleteHandler = (id) => {
+
+      if (window.confirm('are you sure')) {
+        dispatch(deleteUser(id))
+
+        
+      }
   }
 
   return (

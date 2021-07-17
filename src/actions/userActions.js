@@ -16,7 +16,10 @@ import {
   USER_LIST_FAIL,
   USER_LIST_SUCESS,
   USER_LIST_RESET,
-  USER_DETAILS_RESET
+  USER_DETAILS_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_FAIL,
+  USER_DELETE_SUCESS
 } from "../constants/userConstants";
 
 export const login = (email, password) => {
@@ -238,6 +241,47 @@ export const listUsers = () => {
     } catch (error) {
       dispatch({
         type: USER_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+};
+
+export const deleteUser = (id) => {
+  return async (dispatch, getState) => {
+    dispatch({ type: USER_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    try {
+      const res = await fetch(`/api/users/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        }      
+      });
+
+      const data = await res.json();
+      
+
+      if (data.message) {
+        throw new Error("Usuario no valido"); //esto es provicional, lo puse por que habia un error hay que solucionar
+      }
+
+      dispatch({
+        type: USER_DELETE_SUCESS    
+      });
+
+      //me logeo al registrarme
+    } catch (error) {
+      dispatch({
+        type: USER_DELETE_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
