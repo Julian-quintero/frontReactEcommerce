@@ -22,6 +22,7 @@ export const UserListScreen = ({ history}) => {
   useEffect(() => {
 
     if (userInfo && userInfo.isAdmin) {
+      console.log('is admin');
       dispatch(listUsers());
       
     } else {

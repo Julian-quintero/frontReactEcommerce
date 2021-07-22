@@ -1,4 +1,4 @@
-import { PRODUCT_DETAILS_REQUESTS, PRODUCT_LIST_FAIL, PRODUCT_LIST_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL, PRODUCT_LIST_SUCCESS } from "../constants/productsConstants";
+import { PRODUCT_DETAILS_REQUESTS, PRODUCT_LIST_FAIL, PRODUCT_LIST_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL, PRODUCT_LIST_SUCCESS, PRODUCT_DELETE_REQUESTS, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_FAIL, PRODUCT_CREATE_RESET, PRODUCT_CREATE_FAIL, PRODUCT_CREATE_REQUESTS, PRODUCT_CREATE_SUCCESS, PRODUCT_UPDATE_REQUESTS, PRODUCT_UPDATE_SUCCESS, PRODUCT_UPDATE_FAIL, PRODUCT_UPDATE_RESET, PRODUCT_DETAILS_RESET } from "../constants/productsConstants";
 
 
 
@@ -48,7 +48,96 @@ export const productDetailsReducer = (state = { product:{reviews:[]} } /**initia
         error: action.payload,
       };
 
+      case PRODUCT_DETAILS_RESET:
+        return {     
+        };
+
     default:
       return state;
   }
 };
+
+
+export const productDeleteReducer = (state = {} /**initial state */, action) => {
+  switch (action.type) {
+    case PRODUCT_DELETE_REQUESTS:
+      return {
+        loading: true
+      };
+
+    case PRODUCT_DELETE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+
+    case PRODUCT_DELETE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const productCreateReducer = (state = {} /**initial state */, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REQUESTS:
+      return {
+        loading: true
+      };
+
+    case PRODUCT_CREATE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        product: action.payload
+      };
+
+    case PRODUCT_CREATE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+      case PRODUCT_CREATE_RESET:
+        return {
+        };
+
+    default:
+      return state;
+  }
+};
+
+
+export const productUpdateReducer = (state = {product:{}} /**initial state */, action) => {
+  switch (action.type) {
+    case PRODUCT_UPDATE_REQUESTS:
+      return {
+        loading: true
+      };
+
+    case PRODUCT_UPDATE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        product: action.payload
+      };
+
+    case PRODUCT_UPDATE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+      case PRODUCT_UPDATE_RESET:
+        return {
+        };
+
+    default:
+      return state;
+  }
+};
+

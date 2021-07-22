@@ -229,6 +229,8 @@ export const listUsers = () => {
       });
 
       const data = await res.json();
+
+      console.log(data.message);
       
 
       if (data.message) {
