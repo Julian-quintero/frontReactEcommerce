@@ -18,6 +18,9 @@ import { UserListScreen } from "./screens/UserListScreen";
 import { UserEditScreen } from "./screens/UserEditScreen";
 import { ProductListScreen } from "./screens/ProductListScreen";
 import { ProductEditScreen } from "./screens/ProductEditScreen";
+import { OrderListScreen } from "./screens/OrderListScreen";
+
+
 
 
 
@@ -44,6 +47,8 @@ function App() {
             <Route path="/" component={HomeScreen} exact></Route>
             <Route path="/product/:id" component={ProductScreen}></Route>
             <Route path="/admin/productlist" component={ProductListScreen}></Route>
+
+            <Route path="/admin/orderlist" component={OrderListScreen}></Route>
             <Route path="/admin/product/:id/edit" component={ProductEditScreen}></Route>
             <Route path="/cart/:id?" component={CartScreen}></Route>
             {/** ? es opcional */}
