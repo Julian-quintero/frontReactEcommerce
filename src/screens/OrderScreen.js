@@ -9,17 +9,17 @@ import {
   Card,
   Row,
 } from "react-bootstrap";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { savePaymentMethod } from "../actions/cartActions";
 import { logout } from "../actions/userActions";
 import { CheckoutSteps } from "../components/CheckoutSteps";
 import { FormContainer } from "../components/FormContainer";
 import { Link } from "react-router-dom";
-import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { getOrderDetails, payOrder,deliverOrder } from "../actions/orderActions";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import { ORDER_PAY_RESET,ORDER_DELIVERED_RESET } from "../constants/orderConstants";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 
@@ -27,6 +27,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 export const OrderScreen = (props) => {
   const orderId = props.match.params.id;
+  const history = props.history;
 
   const [sdkReady, setsdkReady] = useState(false);
   const [paypalLoaded, setPaypalLoaded] = useState(false);
@@ -36,8 +37,17 @@ export const OrderScreen = (props) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
+  
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo} = userLogin;
+
   const orderPay = useSelector((state) => state.orderPay);
-  const { loading: loadingPay, success: successPay } = orderPay; //los dos puntos es para renombrar las variables
+  const { loading: loadingPay, success: successPay } = orderPay; 
+  
+  //los dos puntos es para renombrar las variables
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   const addPayPalScript = async () => {  
     const { data: clientId } = await axios.get("/api/config/paypal");
@@ -47,12 +57,20 @@ export const OrderScreen = (props) => {
  
 
 
-  useEffect(() => {        
+  useEffect(() => {       
+    
+    if (!userInfo) {
+
+      history.pushState("/login")
+      
+    }
 
 
-    if (!order || successPay) {
+    if (!order || successPay || successDeliver) {
 
       dispatch({type:ORDER_PAY_RESET})
+      dispatch({type:ORDER_DELIVERED_RESET})
+
 
       //disparar esto asi no tengamos el success para que lo vea el usuario
 
@@ -60,7 +78,7 @@ export const OrderScreen = (props) => {
     }  
 
  
-  }, [dispatch, orderId, successPay, order]);
+  }, [dispatch, orderId, successPay, order,successDeliver]);
 
 
 
@@ -73,6 +91,10 @@ export const OrderScreen = (props) => {
     dispatch(payOrder(orderId, paymentResult))
 
 
+  }
+
+  const deliveredHandler = () =>{
+    dispatch(deliverOrder(order))
   }
 
   return loading ? (
@@ -181,6 +203,12 @@ export const OrderScreen = (props) => {
                    </ListGroup.Item>
             
               </ListGroup.Item>
+              {loadingDeliver && <p>loading...</p> }
+              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button type="button" className="btn btn-block" onClick={deliveredHandler}>Mark as delivered</Button>
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>

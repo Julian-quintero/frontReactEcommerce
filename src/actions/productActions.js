@@ -2,6 +2,9 @@ import axios from "axios";
 import {
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUESTS,
+  PRODUCT_CREATE_REVIEW_FAIL,
+  PRODUCT_CREATE_REVIEW_REQUESTS,
+  PRODUCT_CREATE_REVIEW_SUCCESS,
   PRODUCT_CREATE_SUCCESS,
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_REQUESTS,
@@ -175,3 +178,39 @@ export const updateProduct = (product) => {
   };
 };
 
+
+export const createProductReview = (productId, review) => {
+  // el objeto review tiene el review y un comentario
+  return async (dispatch, getState) => {
+    dispatch({ type: PRODUCT_CREATE_REVIEW_REQUESTS });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type':'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    try {
+     await axios.post(`/api/products/${productId}/reviews`,review, config); //post pero no enviamos data
+
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_SUCCESS
+      });
+
+      //me logeo al registrarme
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+};
